@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GIF4o</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.bunny.net" />
+    <link
+      href="https://fonts.bunny.net/css?family=crimson-pro:400,600,700|inter:400,500,600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body></body>
+
+  <script type="module">
+    import { h, render } from "https://cdn.skypack.dev/preact";
+    import { useState } from "https://cdn.skypack.dev/preact/hooks";
+    import { setup, tw } from "https://cdn.skypack.dev/twind";
+    import htm from "https://cdn.skypack.dev/htm";
+
+    const html = htm.bind(h);
+
+    setup({
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ["Crimson Pro", "serif"],
+            sans: ["Inter", "sans-serif"],
+          },
+          colors: {
+            amber: {
+              50: "#fffbeb",
+              100: "#fef3c7",
+              200: "#fde68a",
+              300: "#fcd34d",
+              400: "#fbbf24",
+              500: "#f59e0b",
+              600: "#d97706",
+              700: "#b45309",
+              800: "#92400e",
+              900: "#78350f",
+            },
+            orange: {
+              50: "#fff7ed",
+              100: "#ffedd5",
+              200: "#fed7aa",
+              300: "#fdba74",
+              400: "#fb923c",
+              500: "#f97316",
+              600: "#ea580c",
+            },
+            rose: {
+              100: "#ffe4e6",
+              400: "#fb7185",
+              500: "#f43f5e",
+            },
+          },
+        },
+      },
+    });
+
+    const App = () => {
+      const [phase, setPhase] = useState("input"); // 'input', 'loading', 'completed'
+      const [inputValue, setInputValue] = useState("");
+      const [selectedStyle, setSelectedStyle] = useState("ghibli");
+      const [completedData, setCompletedData] = useState("");
+
+      const handleGenerate = () => {
+        setPhase("loading");
+        setTimeout(() => {
+          setCompletedData(
+            `Generated ${selectedStyle} style result for: ${inputValue}`
+          );
+          setPhase("completed");
+        }, 2000);
+      };
+
+      const renderContent = () => {
+        if (phase === "loading") {
+          return html`<${LoadingComponent} />`;
+        }
+
+        if (phase === "completed") {
+          return html`<${CompletedComponent} data=${completedData} />`;
+        }
+
+        return html`
+          <${InputComponent}
+            value=${inputValue}
+            onChange=${setInputValue}
+            selectedStyle=${selectedStyle}
+            onStyleChange=${setSelectedStyle}
+            onGenerate=${handleGenerate}
+          />
+        `;
+      };
+
+      return html`
+        <main
+          class=${tw`h-screen bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 flex items-center justify-center p-4`}
+        >
+          <div class=${tw`flex flex-col items-center max-w-md w-full`}>
+            <h1
+              class=${tw`font-bold text-5xl text-yellow-800 mb-6 tracking-wide`}
+              style="filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
+            >
+              GIF4o
+            </h1>
+            ${renderContent()}
+          </div>
+        </main>
+      `;
+    };
+
+    const InputComponent = ({
+      value,
+      onChange,
+      selectedStyle,
+      onStyleChange,
+      onGenerate,
+    }) => {
+      return html`
+        <div
+          class=${tw`bg-white rounded-3xl p-8 shadow-2xl border-2 border-yellow-200 w-full`}
+          style="background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(4px)"
+        >
+          <div class=${tw`flex flex-col space-y-6`}>
+            <label
+              class=${tw`text-yellow-800 text-lg font-semibold text-center`}
+            >
+              Create an animation of:
+            </label>
+            <input
+              class=${tw`border-2 border-yellow-300 p-4 rounded-2xl text-yellow-900 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200 bg-yellow-50 text-lg font-medium`}
+              type="text"
+              value=${value}
+              placeholder="A cat jumping in puddles..."
+              onInput=${(e) => onChange(e.target.value)}
+              style="::placeholder { color: #f59e0b }"
+            />
+            <div
+              class=${tw`bg-gradient-to-r from-orange-100 to-pink-100 rounded-2xl p-4`}
+            >
+              <p
+                class=${tw`text-yellow-800 text-sm font-medium mb-3 text-center`}
+              >
+                🎨 Choose your style:
+              </p>
+              <div class=${tw`flex justify-center space-x-8`}>
+                <label
+                  class=${tw`flex items-center text-yellow-800 cursor-pointer group`}
+                >
+                  <input
+                    type="radio"
+                    name="style"
+                    value="ghibli"
+                    checked=${selectedStyle === "ghibli"}
+                    onChange=${(e) => onStyleChange(e.target.value)}
+                    class=${tw`mr-3 w-4 h-4 text-orange-500 border-2 border-yellow-400 focus:ring-orange-300`}
+                  />
+                  <span
+                    class=${tw`font-semibold hover:text-orange-600 transition-colors`}
+                  >
+                    🏯 Ghibli Studio
+                  </span>
+                </label>
+                <label
+                  class=${tw`flex items-center text-yellow-800 cursor-pointer group`}
+                >
+                  <input
+                    type="radio"
+                    name="style"
+                    value="claymation"
+                    checked=${selectedStyle === "claymation"}
+                    onChange=${(e) => onStyleChange(e.target.value)}
+                    class=${tw`mr-3 w-4 h-4 text-orange-500 border-2 border-yellow-400 focus:ring-orange-300`}
+                  />
+                  <span
+                    class=${tw`font-semibold hover:text-orange-600 transition-colors`}
+                  >
+                    🏺 Claymation
+                  </span>
+                </label>
+              </div>
+            </div>
+            <button
+              class=${tw`bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed`}
+              onClick=${onGenerate}
+              disabled=${!value.trim()}
+              style=${!value.trim() ? "transform: none !important" : ""}
+            >
+              ✨ Generate Magic ✨
+            </button>
+          </div>
+        </div>
+      `;
+    };
+
+    const LoadingComponent = () => {
+      return html`
+        <div
+          class=${tw`bg-white rounded-3xl p-12 shadow-2xl border-2 border-yellow-200 text-center`}
+          style="background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px)"
+        >
+          <div class=${tw`animate-spin text-6xl mb-4`}>🎨</div>
+          <h2 class=${tw`text-2xl font-bold text-yellow-800 mb-2`}>
+            Creating Magic...
+          </h2>
+          <p class=${tw`text-yellow-600 text-lg italic`}>
+            Our studio elves are hard at work! ✨
+          </p>
+          <div class=${tw`flex justify-center space-x-2 mt-4`}>
+            <div
+              class=${tw`w-3 h-3 bg-orange-400 rounded-full animate-bounce`}
+            ></div>
+            <div
+              class=${tw`w-3 h-3 bg-pink-400 rounded-full animate-bounce`}
+              style="animation-delay: 75ms"
+            ></div>
+            <div
+              class=${tw`w-3 h-3 bg-yellow-400 rounded-full animate-bounce`}
+              style="animation-delay: 150ms"
+            ></div>
+          </div>
+        </div>
+      `;
+    };
+
+    const CompletedComponent = ({ data }) => {
+      return html`
+        <div
+          class=${tw`bg-white rounded-3xl p-8 shadow-2xl border-2 border-green-200 text-center max-w-md`}
+          style="background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px)"
+        >
+          <div class=${tw`text-6xl mb-4`}>🎉</div>
+          <h2 class=${tw`text-3xl font-bold text-green-800 mb-4`}>
+            Magic Complete!
+          </h2>
+          <div
+            class=${tw`bg-gradient-to-r from-green-50 to-green-100 rounded-2xl p-4 mb-6`}
+          >
+            <p class=${tw`text-green-700 text-lg font-medium`}>${data}</p>
+          </div>
+          <div
+            class=${tw`bg-gray-200 rounded-2xl h-48 flex items-center justify-center mb-4`}
+          >
+            <p class=${tw`text-gray-600 font-medium text-lg`}>
+              🎬 Your animation would appear here!
+            </p>
+          </div>
+          <button
+            class=${tw`bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200`}
+            onClick=${() => window.location.reload()}
+          >
+            ✨ Create Another ✨
+          </button>
+        </div>
+      `;
+    };
+
+    render(html`<${App} />`, document.body);
+  </script>
+</html>
