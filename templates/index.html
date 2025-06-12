@@ -63,16 +63,31 @@
       const [phase, setPhase] = useState("input"); // 'input', 'loading', 'completed'
       const [inputValue, setInputValue] = useState("");
       const [selectedStyle, setSelectedStyle] = useState("ghibli");
-      const [completedData, setCompletedData] = useState("");
+      const [fileName, setFileName] = useState("");
 
-      const handleGenerate = () => {
+      const handleGenerate = async () => {
         setPhase("loading");
-        setTimeout(() => {
-          setCompletedData(
-            `Generated ${selectedStyle} style result for: ${inputValue}`
-          );
-          setPhase("completed");
-        }, 2000);
+
+        // Call python endpoint to generate gif
+        const response = await fetch("/generate_gif", {
+          method: "POST",
+          body: JSON.stringify({
+            prompt: inputValue,
+            style: selectedStyle,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          alert("Failed to generate GIF");
+          setPhase("input");
+          return;
+        }
+
+        const { file_name } = await response.json();
+        setFileName(file_name);
+        setPhase("completed");
       };
 
       const renderContent = () => {
@@ -81,7 +96,11 @@
         }
 
         if (phase === "completed") {
-          return html`<${CompletedComponent} data=${completedData} />`;
+          return html`<${CompletedComponent}
+            fileName=${fileName}
+            setPhase=${setPhase}
+            setInputValue=${setInputValue}
+          />`;
         }
 
         return html`
@@ -226,25 +245,45 @@
       `;
     };
 
-    const CompletedComponent = ({ data }) => {
+    const CompletedComponent = ({ fileName, setPhase, setInputValue }) => {
+      const handleDownload = () => {
+        const link = document.createElement("a");
+        link.href = `/generations/${fileName}`;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
       return html`
         <div
-          class=${tw`bg-white rounded-3xl p-8 shadow-2xl border-2 border-green-200 text-center max-w-lg w-full`}
+          class=${tw`bg-white rounded-3xl p-8 shadow-2xl border-2 border-yellow-200 text-center max-w-lg w-full`}
           style="background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px)"
         >
-          <div
-            class=${tw`bg-gray-200 rounded-2xl h-48 flex items-center justify-center mb-4`}
-          >
-            <p class=${tw`text-gray-600 font-medium text-lg`}>
-              Your animation would appear here!
-            </p>
+          <div class=${tw`rounded-2xl flex items-center justify-center mb-8`}>
+            <img
+              src="/generations/${fileName}"
+              alt="Generated GIF"
+              class=${tw`max-h-full max-w-full rounded-2xl`}
+            />
           </div>
-          <button
-            class=${tw`bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200`}
-            onClick=${() => window.location.reload()}
-          >
-            Create another
-          </button>
+          <div class=${tw`flex flex-col space-y-4`}>
+            <button
+              class=${tw`bg-gradient-to-r from-blue-300 to-blue-400 hover:from-blue-400 hover:to-blue-500 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200`}
+              onClick=${handleDownload}
+            >
+              Download GIF
+            </button>
+            <button
+              class=${tw`bg-gradient-to-r from-green-300 to-green-400 hover:from-green-400 hover:to-green-500 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200`}
+              onClick=${() => {
+                setInputValue("");
+                setPhase("input");
+              }}
+            >
+              Create another
+            </button>
+          </div>
         </div>
       `;
     };
