@@ -99,7 +99,7 @@
         <main
           class=${tw`h-screen bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 flex items-center justify-center p-4`}
         >
-          <div class=${tw`flex flex-col items-center max-w-md w-full`}>
+          <div class=${tw`flex flex-col items-center max-w-lg w-full`}>
             <h1
               class=${tw`font-bold text-5xl text-yellow-800 mb-6 tracking-wide`}
               style="filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
@@ -128,13 +128,13 @@
             <label
               class=${tw`text-yellow-800 text-lg font-semibold text-center`}
             >
-              Create an animation of:
+              Create an animation of...
             </label>
             <input
               class=${tw`border-2 border-yellow-300 p-4 rounded-2xl text-yellow-900 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200 bg-yellow-50 text-lg font-medium`}
               type="text"
               value=${value}
-              placeholder="A cat jumping in puddles..."
+              placeholder="A black cat playing with a ball of yarn"
               onInput=${(e) => onChange(e.target.value)}
               style="::placeholder { color: #f59e0b }"
             />
@@ -144,7 +144,7 @@
               <p
                 class=${tw`text-yellow-800 text-sm font-medium mb-3 text-center`}
               >
-                🎨 Choose your style:
+                Choose your style
               </p>
               <div class=${tw`flex justify-center space-x-8`}>
                 <label
@@ -161,7 +161,7 @@
                   <span
                     class=${tw`font-semibold hover:text-orange-600 transition-colors`}
                   >
-                    🏯 Ghibli Studio
+                    Ghibli Studio
                   </span>
                 </label>
                 <label
@@ -178,7 +178,7 @@
                   <span
                     class=${tw`font-semibold hover:text-orange-600 transition-colors`}
                   >
-                    🏺 Claymation
+                    Claymation
                   </span>
                 </label>
               </div>
@@ -189,7 +189,7 @@
               disabled=${!value.trim()}
               style=${!value.trim() ? "transform: none !important" : ""}
             >
-              ✨ Generate Magic ✨
+              Generate
             </button>
           </div>
         </div>
@@ -199,15 +199,15 @@
     const LoadingComponent = () => {
       return html`
         <div
-          class=${tw`bg-white rounded-3xl p-12 shadow-2xl border-2 border-yellow-200 text-center`}
+          class=${tw`bg-white rounded-3xl p-12 shadow-2xl border-2 border-yellow-200 text-center max-w-lg w-full`}
           style="background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px)"
         >
           <div class=${tw`animate-spin text-6xl mb-4`}>🎨</div>
           <h2 class=${tw`text-2xl font-bold text-yellow-800 mb-2`}>
-            Creating Magic...
+            Generating
           </h2>
           <p class=${tw`text-yellow-600 text-lg italic`}>
-            Our studio elves are hard at work! ✨
+            This might take a moment!
           </p>
           <div class=${tw`flex justify-center space-x-2 mt-4`}>
             <div
@@ -229,30 +229,21 @@
     const CompletedComponent = ({ data }) => {
       return html`
         <div
-          class=${tw`bg-white rounded-3xl p-8 shadow-2xl border-2 border-green-200 text-center max-w-md`}
+          class=${tw`bg-white rounded-3xl p-8 shadow-2xl border-2 border-green-200 text-center max-w-lg w-full`}
           style="background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px)"
         >
-          <div class=${tw`text-6xl mb-4`}>🎉</div>
-          <h2 class=${tw`text-3xl font-bold text-green-800 mb-4`}>
-            Magic Complete!
-          </h2>
-          <div
-            class=${tw`bg-gradient-to-r from-green-50 to-green-100 rounded-2xl p-4 mb-6`}
-          >
-            <p class=${tw`text-green-700 text-lg font-medium`}>${data}</p>
-          </div>
           <div
             class=${tw`bg-gray-200 rounded-2xl h-48 flex items-center justify-center mb-4`}
           >
             <p class=${tw`text-gray-600 font-medium text-lg`}>
-              🎬 Your animation would appear here!
+              Your animation would appear here!
             </p>
           </div>
           <button
             class=${tw`bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200`}
             onClick=${() => window.location.reload()}
           >
-            ✨ Create Another ✨
+            Create another
           </button>
         </div>
       `;
