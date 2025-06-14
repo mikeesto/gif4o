@@ -126,6 +126,23 @@
       onStyleChange,
       onGenerate,
     }) => {
+      const placeholderTextSuggestions = [
+        "A black cat playing with a ball of purple yarn",
+        "A dog chasing butterflies in a sunny meadow",
+        "A starry night sky",
+        "A fox jumping through autumn leaves",
+        "A rabbit hopping through a field of flowers",
+        "Two cats nuzzling under moonlight",
+        "A kite flying with two strings",
+        "Rain falling on a shared umbrella",
+        "A candle flickering between two cups",
+        "Coffee cups steaming side by side",
+        "A snowflake landing on clasped hands",
+        "A butterfly resting on a flower",
+        "A girl looking at the night sky",
+        "A boy looking at the night sky",
+      ];
+
       return html`
         <div
           class=${tw`bg-white rounded-3xl p-8 shadow-2xl border-2 border-yellow-200 w-full`}
@@ -141,7 +158,9 @@
               class=${tw`border-2 border-yellow-300 p-4 rounded-2xl text-yellow-900 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200 bg-yellow-50 text-lg font-medium`}
               type="text"
               value=${value}
-              placeholder="A black cat playing with a ball of yarn"
+              placeholder=${placeholderTextSuggestions[
+                Math.floor(Math.random() * placeholderTextSuggestions.length)
+              ]}
               onInput=${(e) => onChange(e.target.value)}
               style="::placeholder { color: #f59e0b }"
             />
