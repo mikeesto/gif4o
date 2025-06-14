@@ -105,7 +105,9 @@
             <img
               src="/generations/public/cat.gif"
               alt="A black cat playing with a ball of purple yarn"
-              class=${tw`mb-8 rounded-full shadow-lg w-36 h-36 object-cover`}
+              class=${tw`mb-8 rounded-full shadow-lg w-36 h-36 object-cover transition-opacity duration-700 ease-in-out ${
+                phase === "completed" ? "opacity-10" : "opacity-100"
+              }`}
             />
             <h1
               class=${tw`font-bold text-4xl text-yellow-800 mb-6 tracking-wide`}
@@ -233,7 +235,7 @@
             Generating
           </h2>
           <p class=${tw`text-yellow-600 text-lg italic`}>
-            This might take a moment!
+            This will take a moment!
           </p>
           <div class=${tw`flex justify-center space-x-2 mt-4`}>
             <div
