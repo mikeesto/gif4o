@@ -102,5 +102,5 @@ def create_gif_from_grid(
 
 # Usage example for testing
 if __name__ == "__main__":
-    img_file_name = "blonde_girl_reading.png"
+    img_file_name = "ZpJRhERp4bfQtbEbJiWVbv.png"
     create_gif_from_grid(img_file_name)

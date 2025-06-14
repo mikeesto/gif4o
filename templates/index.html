@@ -55,7 +55,7 @@
         const response = await fetch("/generate_gif", {
           method: "POST",
           body: JSON.stringify({
-            prompt: inputValue,
+            userInput: inputValue,
             style: selectedStyle,
           }),
           headers: {
@@ -63,7 +63,7 @@
           },
         });
         if (!response.ok) {
-          alert("Failed to generate GIF");
+          alert("Sorry! There was an error generating the GIF");
           setPhase("input");
           return;
         }
@@ -99,11 +99,16 @@
 
       return html`
         <main
-          class=${tw`h-screen bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 flex items-center justify-center p-4`}
+          class=${tw`h-screen bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 flex justify-center p-4`}
         >
           <div class=${tw`flex flex-col items-center max-w-lg w-full`}>
+            <img
+              src="/generations/public/cat.gif"
+              alt="A black cat playing with a ball of purple yarn"
+              class=${tw`mb-8 rounded-full shadow-lg w-36 h-36 object-cover`}
+            />
             <h1
-              class=${tw`font-bold text-5xl text-yellow-800 mb-6 tracking-wide`}
+              class=${tw`font-bold text-4xl text-yellow-800 mb-6 tracking-wide`}
               style="filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
             >
               GIF4o
@@ -130,7 +135,7 @@
             <label
               class=${tw`text-yellow-800 text-lg font-semibold text-center`}
             >
-              Create an animation of...
+              Create an animation of
             </label>
             <input
               class=${tw`border-2 border-yellow-300 p-4 rounded-2xl text-yellow-900 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200 bg-yellow-50 text-lg font-medium`}

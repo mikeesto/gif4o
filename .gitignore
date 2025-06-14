@@ -2,3 +2,4 @@ venv/
 generations/*.gif
 generations/*.png
 __pycache__/
+.env
