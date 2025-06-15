@@ -1,4 +1,6 @@
 from flask import Flask, render_template, jsonify, request
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from generate import create_gif_from_grid
 from openai import OpenAI
 import base64
@@ -10,6 +12,10 @@ load_dotenv()
 
 app = Flask(__name__, static_folder="generations", static_url_path="/generations")
 
+limiter = Limiter(
+    key_func=get_remote_address, app=app, default_limits=["200 per day", "50 per hour"]
+)
+
 
 @app.route("/")
 def index():
@@ -17,6 +23,7 @@ def index():
 
 
 @app.route("/generate_gif", methods=["POST"])
+@limiter.limit("3 per day")
 def generate_gif():
     data = request.get_json()
     user_input = data.get("userInput")
@@ -54,7 +61,7 @@ def generate_gif():
         gif_file_name = f"{image_uuid}.gif"
         return jsonify({"success": True, "file_name": gif_file_name})
     except Exception as e:
-        return jsonify({"success": False, "error": f"Error generating GIF: {e}"})
+        return jsonify({"success": False, "error": f"Error generating GIF: {e}"}), 500
 
 
 if __name__ == "__main__":

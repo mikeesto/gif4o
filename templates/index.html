@@ -69,7 +69,18 @@
           },
         });
         if (!response.ok) {
-          setErrorMessage("Sorry! There was an error generating the GIF");
+          if (response.status === 500) {
+            setErrorMessage(
+              "Sorry! There was an error generating the GIF. Please try again later."
+            );
+          }
+
+          if (response.status === 429) {
+            setErrorMessage(
+              "Sorry! I had to set a limit on how many GIFs you can generate. OpenAI doesn't generate images for free. This app is open source, though, so you’re welcome to run it locally with your own API key if you want to generate more GIFs."
+            );
+          }
+
           setPhase("input");
           return;
         }
