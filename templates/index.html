@@ -52,6 +52,7 @@
       const [inputValue, setInputValue] = useState("");
       const [selectedStyle, setSelectedStyle] = useState("ghibli");
       const [fileName, setFileName] = useState("");
+      const [errorMessage, setErrorMessage] = useState("");
 
       const handleGenerate = async () => {
         setPhase("loading");
@@ -68,7 +69,7 @@
           },
         });
         if (!response.ok) {
-          alert("Sorry! There was an error generating the GIF");
+          setErrorMessage("Sorry! There was an error generating the GIF");
           setPhase("input");
           return;
         }
@@ -122,6 +123,11 @@
             </h1>
             ${renderContent()}
           </div>
+          ${errorMessage &&
+          html`<${AlertComponent}
+            message=${errorMessage}
+            onClose=${() => setErrorMessage("")}
+          />`}
         </main>
       `;
     };
@@ -296,6 +302,42 @@
               }}
             >
               Create another
+            </button>
+          </div>
+        </div>
+      `;
+    };
+
+    const AlertComponent = ({ message, onClose }) => {
+      return html`
+        <div
+          class=${tw`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50`}
+          onClick=${onClose}
+        >
+          <div
+            class=${tw`bg-white rounded-3xl p-8 shadow-2xl border-2 border-red-200 max-w-md w-full transform transition-all duration-300`}
+            style="background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px)"
+            onClick=${(e) => e.stopPropagation()}
+          >
+            <div class=${tw`flex items-center justify-between mb-6`}>
+              <div class=${tw`flex items-center`}>
+                <h3 class=${tw`text-xl font-bold text-red-700`}>Error</h3>
+              </div>
+              <button
+                class=${tw`text-gray-400 hover:text-gray-600 text-2xl font-bold leading-none`}
+                onClick=${onClose}
+              >
+                ×
+              </button>
+            </div>
+            <p class=${tw`text-red-600 text-lg mb-6 leading-relaxed`}>
+              ${message}
+            </p>
+            <button
+              class=${tw`w-full bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200`}
+              onClick=${onClose}
+            >
+              Close
             </button>
           </div>
         </div>
