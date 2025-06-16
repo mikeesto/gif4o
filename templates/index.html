@@ -133,6 +133,7 @@
               GIF4o
             </h1>
             ${renderContent()}
+            <${FooterComponent} />
           </div>
           ${errorMessage &&
           html`<${AlertComponent}
@@ -352,6 +353,17 @@
             </button>
           </div>
         </div>
+      `;
+    };
+
+    const FooterComponent = () => {
+      return html`
+        <footer class=${tw`mt-8 text-center`}>
+          <p class=${tw`text-yellow-700 text-sm opacity-70`}>
+            <a href="https://mikeesto.com">by @mikeesto</a> ✦ ${" "}
+            <a href="https://github.com/mikeesto/gif4o">source</a>
+          </p>
+        </footer>
       `;
     };
 
