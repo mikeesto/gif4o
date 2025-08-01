@@ -90,6 +90,7 @@ def create_gif_from_grid(
             optimize=True,
             duration=duration,
             loop=0,
+            colors=256,
         )
 
         print(f"GIF created successfully: {gif_output_path}")
