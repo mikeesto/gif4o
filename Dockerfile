@@ -11,4 +11,4 @@ COPY . /app
 
 EXPOSE 3000
 
-CMD ["gunicorn", "-b", "0.0.0.0:3000", "--log-level=debug", "app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:3000", "--log-level=debug", "--timeout", "120", "app:app"]
